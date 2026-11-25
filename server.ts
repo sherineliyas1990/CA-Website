@@ -2,6 +2,7 @@ import express from 'express';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 
@@ -18,7 +19,7 @@ async function startServer() {
   const ai = new GoogleGenAI({ apiKey });
 
   // AI Chat endpoint for Department Study Companion
-  app.post('/api/ai-chat', async (req, res) => {
+  app.post('/api/ai-chat', async (req, res, next) => {
     try {
       const { prompt, context } = req.body;
       if (!prompt) {
@@ -56,6 +57,19 @@ async function startServer() {
   });
 
   app.use(vite.middlewares);
+
+  // SPA fallback to ensure index.html and main.tsx resolve correctly
+  app.use('*', async (req, res, next) => {
+    const url = req.originalUrl;
+    try {
+      let template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+      template = await vite.transformIndexHtml(url, template);
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+    } catch (e: any) {
+      vite.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
 
   const PORT = Number(process.env.PORT) || 3000;
   app.listen(PORT, '0.0.0.0', () => {
