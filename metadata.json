@@ -1,0 +1,6 @@
+{
+  "name": "Department of Computer Applications Portal",
+  "description": "Official portal for the Computer Applications Department featuring academic programmes, department info, events gallery, achievements, and secure Google Sheets-backed student internal marks management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
