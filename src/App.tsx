@@ -3,13 +3,13 @@ import {
   BookOpen, Users, Award, Image as ImageIcon, Calendar, Mail, Phone, MapPin, 
   Search, Shield, UserCheck, Edit3, Save, Plus, Trash2, ChevronRight, Sparkles, 
   ExternalLink, CheckCircle, AlertCircle, FileText, Download, LogOut, X, 
-  Menu, Cpu, Code, Database, Globe, Lock, Terminal, BarChart2, Star, Clock
+  Menu, Cpu, Code, Database, Globe, Lock, Terminal, BarChart2, Star, Clock, MessageSquare, AlertTriangle
 } from 'lucide-react';
 
 // Types
 interface StudentMark {
   id: string;
-  rollNo: string;
+  registerNo: string;
   name: string;
   programme: 'BCA' | 'MCA' | 'BSc CS';
   semester: number;
@@ -18,32 +18,25 @@ interface StudentMark {
   webTechnology: number;
   aiMachineLearning: number;
   softwareEngineering: number;
-  attendance: number; // percentage
+  attendance: number;
 }
 
-interface FacultyMember {
-  name: string;
-  role: string;
-  qualification: string;
-  specialization: string;
-  email: string;
-  image: string;
-}
-
-interface EventItem {
+interface DiscrepancyTicket {
   id: string;
-  title: string;
-  category: 'Workshop' | 'Hackathon' | 'Tech Fest' | 'Alumni Meet' | 'Cultural';
-  date: string;
-  description: string;
-  image: string;
+  registerNo: string;
+  studentName: string;
+  subject: string;
+  currentMark: number;
+  disputeReason: string;
+  status: 'Pending' | 'Resolved' | 'Rejected';
+  dateSubmitted: string;
 }
 
 // Initial mock student data
 const initialStudents: StudentMark[] = [
   {
     id: '1',
-    rollNo: 'BCA2026001',
+    registerNo: 'CA2026BCA01',
     name: 'Aarav Sharma',
     programme: 'BCA',
     semester: 4,
@@ -56,7 +49,7 @@ const initialStudents: StudentMark[] = [
   },
   {
     id: '2',
-    rollNo: 'BCA2026002',
+    registerNo: 'CA2026BCA02',
     name: 'Priya Patel',
     programme: 'BCA',
     semester: 4,
@@ -69,7 +62,7 @@ const initialStudents: StudentMark[] = [
   },
   {
     id: '3',
-    rollNo: 'MCA2026015',
+    registerNo: 'CA2026MCA15',
     name: 'Rahul Verma',
     programme: 'MCA',
     semester: 2,
@@ -79,122 +72,51 @@ const initialStudents: StudentMark[] = [
     aiMachineLearning: 46,
     softwareEngineering: 41,
     attendance: 88
-  },
-  {
-    id: '4',
-    rollNo: 'BSC2026008',
-    name: 'Ananya Iyer',
-    programme: 'BSc CS',
-    semester: 6,
-    dataStructures: 46,
-    databaseSystems: 44,
-    webTechnology: 49,
-    aiMachineLearning: 48,
-    softwareEngineering: 47,
-    attendance: 94
   }
 ];
 
-const facultyList: FacultyMember[] = [
+const initialTickets: DiscrepancyTicket[] = [
   {
-    name: 'Dr. Ramesh Kumar',
-    role: 'Professor & Head of Department',
-    qualification: 'Ph.D. in Computer Science (IIT Delhi)',
-    specialization: 'Artificial Intelligence, Distributed Systems',
-    email: 'hod.ca@university.edu',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'
-  },
-  {
-    name: 'Dr. Sunita Deshmukh',
-    role: 'Associate Professor',
-    qualification: 'Ph.D. in Software Engineering',
-    specialization: 'Software Architecture, Cloud Computing',
-    email: 'sunita.d@university.edu',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400'
-  },
-  {
-    name: 'Prof. Vikram Malhotra',
-    role: 'Assistant Professor',
-    qualification: 'M.Tech in Computer Applications',
-    specialization: 'Full Stack Web Engineering, Cybersecurity',
-    email: 'vikram.m@university.edu',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400'
-  },
-  {
-    name: 'Dr. Neha Gupta',
-    role: 'Assistant Professor',
-    qualification: 'Ph.D. in Data Science',
-    specialization: 'Machine Learning, Natural Language Processing',
-    email: 'neha.g@university.edu',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400'
-  }
-];
-
-const eventItems: EventItem[] = [
-  {
-    id: 'e1',
-    title: 'TechnoVation Annual Tech Fest 2026',
-    category: 'Tech Fest',
-    date: 'March 15-16, 2026',
-    description: 'Flagship annual technical festival featuring coding competitions, robotics showdowns, and keynote speeches from industry leaders.',
-    image: '/src/assets/images/event_technovation_1795586547481.jpg'
-  },
-  {
-    id: 'e2',
-    title: 'AI & Generative Models Hackathon',
-    category: 'Hackathon',
-    date: 'February 10, 2026',
-    description: '36-hour intense hackathon where 250+ student developers built cutting-edge generative AI applications using Gemini APIs.',
-    image: '/src/assets/images/lab_ai_computing_1795586546684.jpg'
-  },
-  {
-    id: 'e3',
-    title: 'Advanced Cloud Architecture Workshop',
-    category: 'Workshop',
-    date: 'January 28, 2026',
-    description: 'Hands-on Kubernetes and serverless deployment workshop conducted by senior cloud architects from Google Cloud.',
-    image: '/src/assets/images/dept_hero_banner_1795586546857.jpg'
-  },
-  {
-    id: 'e4',
-    title: 'Global Alumni Tech Meet & Mentorship',
-    category: 'Alumni Meet',
-    date: 'December 18, 2025',
-    description: 'Connecting current students with distinguished alumni working at Google, Microsoft, Amazon, and top tech startups.',
-    image: '/src/assets/images/dept_campus_library_1795586546542.jpg'
+    id: 't1',
+    registerNo: 'CA2026BCA01',
+    studentName: 'Aarav Sharma',
+    subject: 'AI & Machine Learning',
+    currentMark: 39,
+    disputeReason: 'Mid-term assignment score of 12 marks was not added to the final internal total.',
+    status: 'Pending',
+    dateSubmitted: '2026-11-24'
   }
 ];
 
 export default function App() {
   // Navigation State
-  const [activeTab, setActiveTab] = useState<'home' | 'about' | 'programmes' | 'achievements' | 'gallery' | 'marks' | 'contact'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'marks' | 'discrepancies' | 'about' | 'contact'>('marks');
   
   // Auth & Role State
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userRole, setUserRole] = useState<'guest' | 'student' | 'faculty'>('guest');
-  const [currentUserRoll, setCurrentUserRoll] = useState<string>('');
+  const [currentRegisterNo, setCurrentRegisterNo] = useState<string>('');
   const [loginInput, setLoginInput] = useState<string>('');
   const [loginError, setLoginError] = useState<string>('');
 
-  // Marks Management State (stored in localStorage / Google Sheets sync)
+  // Marks Management State
   const [students, setStudents] = useState<StudentMark[]>(() => {
-    const saved = localStorage.getItem('ca_dept_students');
+    const saved = localStorage.getItem('ca_dept_students_v2');
     return saved ? JSON.parse(saved) : initialStudents;
   });
 
-  // Google Sheets integration config state
-  const [sheetIdInput, setSheetIdInput] = useState<string>(() => {
-    return localStorage.getItem('ca_google_sheet_id') || '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms';
+  // Discrepancy Tickets State
+  const [tickets, setTickets] = useState<DiscrepancyTicket[]>(() => {
+    const saved = localStorage.getItem('ca_dept_tickets_v2');
+    return saved ? JSON.parse(saved) : initialTickets;
   });
-  const [isSyncingSheet, setIsSyncingSheet] = useState(false);
-  const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
-  // Admin / Faculty editing state
+  // Faculty editing state
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<StudentMark | null>(null);
   const [isAddingStudent, setIsAddingStudent] = useState(false);
   const [newStudent, setNewStudent] = useState<Omit<StudentMark, 'id'>>({
-    rollNo: '',
+    registerNo: '',
     name: '',
     programme: 'BCA',
     semester: 1,
@@ -206,50 +128,52 @@ export default function App() {
     attendance: 90
   });
 
-  // Gallery filter & lightbox
-  const [galleryFilter, setGalleryFilter] = useState<string>('All');
-  const [lightboxImage, setLightboxImage] = useState<EventItem | null>(null);
+  // Student Discrepancy Modal state
+  const [discrepancyModalOpen, setDiscrepancyModalOpen] = useState(false);
+  const [disputeSubject, setDisputeSubject] = useState('Data Structures');
+  const [disputeReason, setDisputeReason] = useState('');
+  const [disputeSuccess, setDisputeSuccess] = useState(false);
 
-  // AI Study Advisor State
+  // AI Advisor State
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiConversation, setAiConversation] = useState<{ sender: 'user' | 'ai'; text: string }[]>([
-    { sender: 'ai', text: 'Hello! I am your AI Department Advisor. Ask me anything about BCA/MCA curriculum, exam prep, lab timings, or career placement!' }
+    { sender: 'ai', text: 'Hello! I am your AI Department & Marks Assistant. Ask me about your internal marks breakdown, exam regulations, or course syllabi.' }
   ]);
   const [isAiLoading, setIsAiLoading] = useState(false);
 
-  // Contact form state
-  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [contactSubmitted, setContactSubmitted] = useState(false);
-
-  // Save to localStorage when students change
+  // Save to localStorage
   useEffect(() => {
-    localStorage.setItem('ca_dept_students', JSON.stringify(students));
+    localStorage.setItem('ca_dept_students_v2', JSON.stringify(students));
   }, [students]);
+
+  useEffect(() => {
+    localStorage.setItem('ca_dept_tickets_v2', JSON.stringify(tickets));
+  }, [tickets]);
 
   // Handle Login
   const handleLogin = (role: 'student' | 'faculty') => {
     setLoginError('');
     if (role === 'student') {
-      const roll = loginInput.trim().toUpperCase();
-      if (!roll) {
-        setLoginError('Please enter your Student Roll Number (e.g. BCA2026001)');
+      const regNo = loginInput.trim().toUpperCase();
+      if (!regNo) {
+        setLoginError('Please enter your Register Number (e.g. CA2026BCA01)');
         return;
       }
-      const found = students.find(s => s.rollNo.toUpperCase() === roll);
+      const found = students.find(s => s.registerNo.toUpperCase() === regNo);
       if (found) {
         setUserRole('student');
-        setCurrentUserRoll(found.rollNo);
+        setCurrentRegisterNo(found.registerNo);
         setAuthModalOpen(false);
         setActiveTab('marks');
         setLoginInput('');
       } else {
-        // If roll not in list, let's create a temporary student record so user can test immediately!
+        // Create demo student record if not found so user can test immediately
         const newDemoStudent: StudentMark = {
           id: Date.now().toString(),
-          rollNo: roll,
-          name: 'Student ' + roll,
-          programme: roll.includes('MCA') ? 'MCA' : roll.includes('BSC') ? 'BSc CS' : 'BCA',
+          registerNo: regNo,
+          name: 'Student ' + regNo,
+          programme: regNo.includes('MCA') ? 'MCA' : regNo.includes('BSC') ? 'BSc CS' : 'BCA',
           semester: 4,
           dataStructures: 42,
           databaseSystems: 45,
@@ -260,15 +184,14 @@ export default function App() {
         };
         setStudents(prev => [...prev, newDemoStudent]);
         setUserRole('student');
-        setCurrentUserRoll(roll);
+        setCurrentRegisterNo(regNo);
         setAuthModalOpen(false);
         setActiveTab('marks');
         setLoginInput('');
       }
     } else {
-      // Faculty login
       setUserRole('faculty');
-      setCurrentUserRoll('FACULTY_ADMIN');
+      setCurrentRegisterNo('FACULTY_ADMIN');
       setAuthModalOpen(false);
       setActiveTab('marks');
     }
@@ -276,26 +199,14 @@ export default function App() {
 
   const handleLogout = () => {
     setUserRole('guest');
-    setCurrentUserRoll('');
-    setActiveTab('home');
-  };
-
-  // Google Sheets sync simulation / API integration
-  const handleSyncWithGoogleSheets = () => {
-    setIsSyncingSheet(true);
-    setSyncMessage(null);
-    setTimeout(() => {
-      localStorage.setItem('ca_google_sheet_id', sheetIdInput);
-      setIsSyncingSheet(false);
-      setSyncMessage('Successfully synchronized student records with Google Sheet (' + sheetIdInput.slice(0, 10) + '...)');
-      setTimeout(() => setSyncMessage(null), 4000);
-    }, 1200);
+    setCurrentRegisterNo('');
+    setActiveTab('marks');
   };
 
   // Add Student handler
   const handleAddStudentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newStudent.rollNo || !newStudent.name) return;
+    if (!newStudent.registerNo || !newStudent.name) return;
     const item: StudentMark = {
       id: Date.now().toString(),
       ...newStudent
@@ -303,7 +214,7 @@ export default function App() {
     setStudents(prev => [item, ...prev]);
     setIsAddingStudent(false);
     setNewStudent({
-      rollNo: '',
+      registerNo: '',
       name: '',
       programme: 'BCA',
       semester: 1,
@@ -324,11 +235,49 @@ export default function App() {
     setEditForm(null);
   };
 
-  // Delete student
   const handleDeleteStudent = (id: string) => {
     if (window.confirm('Are you sure you want to remove this student record?')) {
       setStudents(prev => prev.filter(s => s.id !== id));
     }
+  };
+
+  // Submit Discrepancy Ticket
+  const handleDiscrepancySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!disputeReason.trim()) return;
+
+    const currentStudent = students.find(s => s.registerNo.toUpperCase() === currentRegisterNo.toUpperCase());
+    const markMap: Record<string, number> = {
+      'Data Structures': currentStudent?.dataStructures || 0,
+      'Database Systems': currentStudent?.databaseSystems || 0,
+      'Web Technology': currentStudent?.webTechnology || 0,
+      'AI & Machine Learning': currentStudent?.aiMachineLearning || 0,
+      'Software Engineering': currentStudent?.softwareEngineering || 0
+    };
+
+    const newTicket: DiscrepancyTicket = {
+      id: Date.now().toString(),
+      registerNo: currentRegisterNo,
+      studentName: currentStudent?.name || 'Student',
+      subject: disputeSubject,
+      currentMark: markMap[disputeSubject] || 0,
+      disputeReason: disputeReason.trim(),
+      status: 'Pending',
+      dateSubmitted: new Date().toISOString().split('T')[0]
+    };
+
+    setTickets(prev => [newTicket, ...prev]);
+    setDisputeSuccess(true);
+    setTimeout(() => {
+      setDisputeSuccess(false);
+      setDiscrepancyModalOpen(false);
+      setDisputeReason('');
+    }, 2000);
+  };
+
+  // Resolve / Update ticket status (Faculty action)
+  const handleResolveTicket = (ticketId: string, newStatus: 'Resolved' | 'Rejected') => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: newStatus } : t));
   };
 
   // AI Chat Handler
@@ -347,18 +296,18 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: userMsg,
-          context: 'Department of Computer Applications portal providing BCA, MCA, BSc CS, PhD programmes, internal marks, and student support.'
+          context: 'Department of Computer Applications internal marks and discrepancy portal. Students can view marks and report discrepancies for faculty review.'
         })
       });
       const data = await res.json();
       if (data.text) {
         setAiConversation(prev => [...prev, { sender: 'ai', text: data.text }]);
       } else {
-        setAiConversation(prev => [...prev, { sender: 'ai', text: 'I apologize, but I am unable to process your request at the moment. Please try again.' }]);
+        setAiConversation(prev => [...prev, { sender: 'ai', text: 'I am here to help with your internal marks and department queries.' }]);
       }
     } catch (err) {
       console.error(err);
-      setAiConversation(prev => [...prev, { sender: 'ai', text: 'Network error connecting to AI Academic Advisor.' }]);
+      setAiConversation(prev => [...prev, { sender: 'ai', text: 'AI assistant is currently offline.' }]);
     } finally {
       setIsAiLoading(false);
     }
@@ -371,12 +320,9 @@ export default function App() {
       <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
           
-          {/* Zone 1: Brand Wordmark */}
-          <button 
-            onClick={() => setActiveTab('home')}
-            className="flex items-center gap-3 text-left focus:outline-none shrink-0 group"
-          >
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+          {/* Zone 1: Brand */}
+          <div className="flex items-center gap-3 text-left shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20">
               CA
             </div>
             <div>
@@ -384,48 +330,35 @@ export default function App() {
                 Computer Applications
               </span>
               <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium">
-                Department Portal
+                Internal Marks & Discrepancy Portal
               </span>
             </div>
-          </button>
+          </div>
 
           {/* Zone 2: Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
             <button 
-              onClick={() => setActiveTab('home')} 
-              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'home' ? 'text-blue-600 font-semibold' : ''}`}
+              onClick={() => setActiveTab('marks')} 
+              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'marks' ? 'text-blue-600 font-semibold' : ''}`}
             >
-              Overview
+              Internal Marks Dashboard
+            </button>
+            <button 
+              onClick={() => setActiveTab('discrepancies')} 
+              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 flex items-center gap-1.5 ${activeTab === 'discrepancies' ? 'text-blue-600 font-semibold' : ''}`}
+            >
+              <span>Discrepancy Portal</span>
+              {tickets.filter(t => t.status === 'Pending').length > 0 && (
+                <span className="px-1.5 py-0.5 bg-red-500 text-white rounded-full text-[10px]">
+                  {tickets.filter(t => t.status === 'Pending').length}
+                </span>
+              )}
             </button>
             <button 
               onClick={() => setActiveTab('about')} 
               className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'about' ? 'text-blue-600 font-semibold' : ''}`}
             >
-              About Department
-            </button>
-            <button 
-              onClick={() => setActiveTab('programmes')} 
-              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'programmes' ? 'text-blue-600 font-semibold' : ''}`}
-            >
-              Programmes
-            </button>
-            <button 
-              onClick={() => setActiveTab('achievements')} 
-              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'achievements' ? 'text-blue-600 font-semibold' : ''}`}
-            >
-              Achievements
-            </button>
-            <button 
-              onClick={() => setActiveTab('gallery')} 
-              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'gallery' ? 'text-blue-600 font-semibold' : ''}`}
-            >
-              Gallery
-            </button>
-            <button 
-              onClick={() => setActiveTab('marks')} 
-              className={`transition-colors whitespace-nowrap shrink-0 hover:text-blue-600 ${activeTab === 'marks' ? 'text-blue-600 font-semibold' : ''}`}
-            >
-              Internal Marks
+              Department Info
             </button>
             <button 
               onClick={() => setActiveTab('contact')} 
@@ -442,7 +375,7 @@ export default function App() {
               className="hidden sm:flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 transition-colors"
             >
               <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span>AI Study Hub</span>
+              <span>AI Assistant</span>
             </button>
 
             {userRole === 'guest' ? (
@@ -457,10 +390,10 @@ export default function App() {
               <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
                   <span className="text-xs font-bold block text-slate-900 dark:text-white">
-                    {userRole === 'faculty' ? 'Faculty Admin' : `Student (${currentUserRoll})`}
+                    {userRole === 'faculty' ? 'Faculty Admin' : `Student (${currentRegisterNo})`}
                   </span>
                   <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium block">
-                    ● Secure Session
+                    ● Active Session
                   </span>
                 </div>
                 <button
@@ -478,432 +411,23 @@ export default function App() {
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main>
+      <main className="py-12 max-w-7xl mx-auto px-6">
         
-        {/* TAB 1: HOME / OVERVIEW */}
-        {activeTab === 'home' && (
-          <div>
-            {/* HERO SECTION */}
-            <section className="relative py-24 lg:py-32 overflow-hidden border-b border-slate-200 dark:border-slate-800">
-              <div className="absolute inset-0 z-0 opacity-20 dark:opacity-30">
-                <img 
-                  src="/src/assets/images/dept_hero_banner_1795586546857.jpg" 
-                  alt="Department Hero" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950 via-slate-50/80 dark:via-slate-950/80 to-transparent"></div>
-              </div>
-
-              <div className="max-w-7xl mx-auto px-6 relative z-10">
-                <div className="max-w-3xl">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-6">
-                    <span>Excellence in Computing Education</span>
-                    <span aria-hidden="true">·</span>
-                    <span>Established 1998</span>
-                  </div>
-
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight mb-6 text-balance">
-                    Shaping the Future of Technology & Innovation
-                  </h1>
-
-                  <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
-                    Welcome to the Department of Computer Applications. We empower students with rigorous academic foundations, hands-on artificial intelligence engineering, and cloud-native software development.
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-4">
-                    <button
-                      onClick={() => setActiveTab('programmes')}
-                      className="px-6 py-3.5 text-sm font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/20 flex items-center gap-2"
-                    >
-                      <span>Explore Programmes</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('marks')}
-                      className="px-6 py-3.5 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
-                    >
-                      <BarChart2 className="w-4 h-4 text-blue-600" />
-                      <span>Student Internal Marks</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* QUICK STATS STRIP */}
-            <section className="py-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-              <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div>
-                  <div className="text-3xl lg:text-4xl font-extrabold text-blue-600 mb-1 tabular-nums">1,250+</div>
-                  <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Enrolled Students</div>
-                </div>
-                <div>
-                  <div className="text-3xl lg:text-4xl font-extrabold text-blue-600 mb-1 tabular-nums">98.5%</div>
-                  <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Placement Rate</div>
-                </div>
-                <div>
-                  <div className="text-3xl lg:text-4xl font-extrabold text-blue-600 mb-1 tabular-nums">45+</div>
-                  <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Industry Partners</div>
-                </div>
-                <div>
-                  <div className="text-3xl lg:text-4xl font-extrabold text-blue-600 mb-1 tabular-nums">120+</div>
-                  <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Research Papers</div>
-                </div>
-              </div>
-            </section>
-
-            {/* HIGHLIGHTS SECTION */}
-            <section className="py-20 max-w-7xl mx-auto px-6">
-              <div className="text-center max-w-2xl mx-auto mb-16">
-                <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
-                  Why Choose Our Department
-                </h2>
-                <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
-                  Our curriculum combines rigorous theoretical computer science with practical industry projects, state-of-the-art labs, and mentorship.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 flex items-center justify-center mb-6">
-                    <Cpu className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">AI & Cloud Laboratories</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Access dedicated AI clusters with high-end GPUs, cloud developer environments, and robotics testbeds for immersive learning.
-                  </p>
-                </div>
-
-                <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 flex items-center justify-center mb-6">
-                    <Database className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Google Sheets & Cloud Sync</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Secure real-time internal marks tracking backed by Google Sheets integration, ensuring transparency for students and faculty.
-                  </p>
-                </div>
-
-                <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-                  <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/80 text-amber-600 flex items-center justify-center mb-6">
-                    <Award className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Elite Placements</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Our graduates secure coveted software engineering and data science roles at Google, Microsoft, Amazon, and top multinational firms.
-                  </p>
-                </div>
-              </div>
-            </section>
-          </div>
-        )}
-
-        {/* TAB 2: ABOUT THE DEPARTMENT */}
-        {activeTab === 'about' && (
-          <div className="py-16 max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mb-16">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-                About the Department
-              </h1>
-              <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-                Founded in 1998, the Department of Computer Applications has grown into a premier center for computing education, software research, and technological innovation.
-              </p>
-            </div>
-
-            {/* Vision & Mission Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Our Vision</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                  To be a globally recognized department of academic excellence producing ethical, highly skilled computing professionals capable of solving complex societal challenges through innovation.
-                </p>
-              </div>
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Our Mission</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                  To provide transformative education in computer applications, foster cutting-edge research in AI and software engineering, and cultivate strong industry partnerships.
-                </p>
-              </div>
-            </div>
-
-            {/* Faculty Directory */}
-            <div className="mb-20">
-              <div className="mb-10">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Faculty Directory</h2>
-                <p className="text-slate-500 dark:text-slate-400 text-sm">
-                  Distinguished educators and researchers guiding our academic programmes.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {facultyList.map((fac, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-xs flex flex-col">
-                    <div className="h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
-                      <img src={fac.image} alt={fac.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                    </div>
-                    <div className="p-6 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">{fac.name}</h3>
-                        <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">{fac.role}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{fac.qualification}</div>
-                        <div className="text-xs text-slate-600 dark:text-slate-300 font-medium mb-4">{fac.specialization}</div>
-                      </div>
-                      <a href={`mailto:${fac.email}`} className="inline-flex items-center gap-2 text-xs font-semibold text-blue-600 hover:underline">
-                        <Mail className="w-3.5 h-3.5" />
-                        <span>{fac.email}</span>
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: PROGRAMMES OFFERED */}
-        {activeTab === 'programmes' && (
-          <div className="py-16 max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mb-16">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-                Academic Programmes Offered
-              </h1>
-              <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-                Comprehensive degree programmes designed in consultation with industry leaders to prepare students for modern software engineering and AI careers.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              {/* BCA Programme */}
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                  <div>
-                    <div className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-md mb-2">
-                      Undergraduate
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">BCA (Bachelor of Computer Applications)</h2>
-                  </div>
-                  <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                    Duration: 3 Years (6 Semesters)
-                  </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
-                  Focuses on building a robust foundation in programming languages, data structures, database management systems, web engineering, and software project management.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Eligibility</strong>10+2 with Mathematics (min 50%)</div>
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Key Subjects</strong>Data Structures, OOPs, DBMS, Python</div>
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Career Roles</strong>Software Engineer, Full Stack Dev, QA Analyst</div>
-                </div>
-              </div>
-
-              {/* MCA Programme */}
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                  <div>
-                    <div className="inline-block px-3 py-1 bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-md mb-2">
-                      Postgraduate
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">MCA (Master of Computer Applications)</h2>
-                  </div>
-                  <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                    Duration: 2 Years (4 Semesters)
-                  </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
-                  An advanced professional degree emphasizing Artificial Intelligence, Machine Learning, Cloud Computing, Distributed Systems, and Enterprise Software Architecture.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Eligibility</strong>Graduation with Mathematics/Statistics</div>
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Key Subjects</strong>Advanced AI, Cloud DevOps, Big Data, Microservices</div>
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Career Roles</strong>Lead Architect, AI Engineer, Cloud Specialist</div>
-                </div>
-              </div>
-
-              {/* BSc CS Programme */}
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                  <div>
-                    <div className="inline-block px-3 py-1 bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-md mb-2">
-                      Undergraduate Science
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">B.Sc. Computer Science</h2>
-                  </div>
-                  <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                    Duration: 3 Years (6 Semesters)
-                  </div>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
-                  Blends core computer science theory with mathematical rigor, operating systems, compiler design, and computer graphics.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Eligibility</strong>10+2 Science Stream with Physics & Math</div>
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Key Subjects</strong>Algorithms, Operating Systems, Networks</div>
-                  <div><strong className="text-slate-900 dark:text-white block mb-1">Career Roles</strong>Systems Analyst, R&D Engineer, Researcher</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 4: ACHIEVEMENTS */}
-        {activeTab === 'achievements' && (
-          <div className="py-16 max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mb-16">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-                Department Achievements & Placements
-              </h1>
-              <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-                Celebrating student victories in national hackathons, peer-reviewed research publications, and outstanding placement records.
-              </p>
-            </div>
-
-            {/* Achievements Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 flex items-center justify-center mb-6 font-bold text-lg">
-                  🥇
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Smart India Hackathon Gold</h3>
-                <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold mb-3">January 2026</p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                  A team of 6 MCA students won the national gold medal for developing an AI-powered disaster response geospatial intelligence platform.
-                </p>
-              </div>
-
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center mb-6 font-bold text-lg">
-                  📚
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">IEEE & ACM Publications</h3>
-                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mb-3">Academic Year 2025-26</p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                  Our faculty and postgraduate scholars published 24 papers in premier SCI-indexed international journals and conferences.
-                </p>
-              </div>
-
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 flex items-center justify-center mb-6 font-bold text-lg">
-                  💼
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Top Tier Placements</h3>
-                <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mb-3">Placement Season 2025-26</p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                  Over 180 placement offers secured with top tech giants including Google, Microsoft, Amazon, Adobe, and Goldman Sachs.
-                </p>
-              </div>
-            </div>
-
-            {/* Recruiter Logos Banner */}
-            <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center">
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-6">Our Principal Recruiting Partners</h3>
-              <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 text-xl font-extrabold text-slate-700 dark:text-slate-300">
-                <span>Google</span>
-                <span>Microsoft</span>
-                <span>Amazon</span>
-                <span>Adobe</span>
-                <span>Goldman Sachs</span>
-                <span>TCS</span>
-                <span>Infosys</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 5: GALLERY */}
-        {activeTab === 'gallery' && (
-          <div className="py-16 max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3">
-                  Department Events Gallery
-                </h1>
-                <p className="text-slate-600 dark:text-slate-300 text-base">
-                  Glimpses of technical symposia, hackathons, workshops, and student life.
-                </p>
-              </div>
-
-              {/* Filter Tabs */}
-              <div className="flex items-center gap-1.5 p-1 bg-slate-200 dark:bg-slate-800 rounded-xl">
-                {['All', 'Tech Fest', 'Hackathon', 'Workshop', 'Alumni Meet'].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setGalleryFilter(cat)}
-                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${galleryFilter === cat ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'}`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Gallery Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
-              {eventItems
-                .filter(item => galleryFilter === 'All' || item.category === galleryFilter)
-                .map((item) => (
-                  <div 
-                    key={item.id}
-                    onClick={() => setLightboxImage(item)}
-                    className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs cursor-pointer hover:border-blue-500 transition-all duration-300 flex flex-col"
-                  >
-                    <div className="h-72 overflow-hidden relative">
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-semibold">
-                        {item.category}
-                      </div>
-                    </div>
-                    <div className="p-6">
-                      <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">{item.date}</div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{item.title}</h3>
-                      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-
-            {/* Lightbox Modal */}
-            {lightboxImage && (
-              <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-3xl w-full overflow-hidden border border-slate-800 shadow-2xl relative">
-                  <button 
-                    onClick={() => setLightboxImage(null)}
-                    className="absolute top-4 right-4 z-10 p-2 bg-black/60 text-white rounded-full hover:bg-black transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                  <div className="h-80 sm:h-96 overflow-hidden">
-                    <img src={lightboxImage.image} alt={lightboxImage.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">{lightboxImage.category}</span>
-                      <span className="text-xs text-slate-500">{lightboxImage.date}</span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">{lightboxImage.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{lightboxImage.description}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 6: INTERNAL MARKS & GOOGLE SHEETS MANAGEMENT */}
+        {/* INTERNAL MARKS TAB */}
         {activeTab === 'marks' && (
-          <div className="py-16 max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
               <div>
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3">
+                <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
                   Student Internal Marks Portal
                 </h1>
-                <p className="text-slate-600 dark:text-slate-300 text-base">
-                  {userRole === 'faculty' ? 'Faculty Admin Dashboard: Enter and update internal assessment marks securely.' : 
-                   userRole === 'student' ? `Personal Marks Dashboard for Roll No: ${currentUserRoll}` : 
-                   'Please login as Student or Faculty Admin to view or manage marks.'}
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
+                  {userRole === 'faculty' ? 'Faculty Mode: Enter and update student names, register numbers, and subject marks.' : 
+                   userRole === 'student' ? `Viewing marks for Register No: ${currentRegisterNo}` : 
+                   'Please login as Faculty or Student to view or manage internal marks.'}
                 </p>
               </div>
 
-              {/* Role Indicator & Actions */}
               <div className="flex items-center gap-3">
                 {userRole === 'guest' && (
                   <button
@@ -916,77 +440,46 @@ export default function App() {
                 )}
 
                 {userRole === 'faculty' && (
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => setIsAddingStudent(true)}
-                      className="px-4 py-2.5 text-xs font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-500 transition-colors shadow-sm flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Add Student Record</span>
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setIsAddingStudent(true)}
+                    className="px-4 py-2.5 text-xs font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-500 transition-colors shadow-sm flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add New Student</span>
+                  </button>
+                )}
+
+                {userRole === 'student' && (
+                  <button
+                    onClick={() => setDiscrepancyModalOpen(true)}
+                    className="px-4 py-2.5 text-xs font-semibold text-white bg-amber-600 rounded-xl hover:bg-amber-500 transition-colors shadow-sm flex items-center gap-2"
+                  >
+                    <AlertTriangle className="w-4 h-4" />
+                    <span>Report Mark Discrepancy</span>
+                  </button>
                 )}
               </div>
             </div>
-
-            {/* GOOGLE SHEETS SYNC STATUS PANEL (Visible to Faculty/Admin) */}
-            {userRole === 'faculty' && (
-              <div className="mb-10 p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-                      <Database className="w-4 h-4 text-emerald-600" />
-                      <span>Google Sheets Database Sync</span>
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Connected to Google Sheets API v4. All frontend entries automatically synchronize with your cloud spreadsheet.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <input 
-                      type="text" 
-                      value={sheetIdInput}
-                      onChange={(e) => setSheetIdInput(e.target.value)}
-                      placeholder="Google Sheet ID / URL"
-                      className="px-3 py-2 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg w-64 text-slate-900 dark:text-white font-mono"
-                    />
-                    <button 
-                      onClick={handleSyncWithGoogleSheets}
-                      disabled={isSyncingSheet}
-                      className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 transition-colors shrink-0 flex items-center gap-2"
-                    >
-                      {isSyncingSheet ? 'Syncing...' : 'Sync with Sheet'}
-                    </button>
-                  </div>
-                </div>
-                {syncMessage && (
-                  <div className="mt-4 p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs rounded-lg flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>{syncMessage}</span>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* ADD STUDENT MODAL / FORM */}
             {isAddingStudent && (
               <div className="mb-10 p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add New Student & Internal Marks</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add Student & Internal Marks</h3>
                   <button onClick={() => setIsAddingStudent(false)} className="text-slate-400 hover:text-slate-600">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
                 <form onSubmit={handleAddStudentSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Roll Number</label>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Register Number</label>
                     <input 
                       type="text" 
                       required
-                      value={newStudent.rollNo}
-                      onChange={e => setNewStudent({...newStudent, rollNo: e.target.value})}
-                      placeholder="e.g. BCA2026099" 
-                      className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg"
+                      value={newStudent.registerNo}
+                      onChange={e => setNewStudent({...newStudent, registerNo: e.target.value})}
+                      placeholder="e.g. CA2026BCA99" 
+                      className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg uppercase"
                     />
                   </div>
                   <div>
@@ -1079,22 +572,22 @@ export default function App() {
                       type="submit" 
                       className="px-5 py-2 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500"
                     >
-                      Save Student Record
+                      Save Record
                     </button>
                   </div>
                 </form>
               </div>
             )}
 
-            {/* MARKS TABLE OR STUDENT DASHBOARD */}
+            {/* MARKS TABLE */}
             {userRole === 'guest' ? (
               <div className="p-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center max-w-xl mx-auto shadow-xs">
                 <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 flex items-center justify-center mx-auto mb-6 text-2xl">
                   🔒
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Authentication Required</h3>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Portal Login Required</h3>
                 <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">
-                  Please log in as a student using your Roll Number or sign in as Faculty Admin to access internal marks securely.
+                  Please log in as a student with your Register Number or log in as Faculty Admin to enter and view internal marks.
                 </p>
                 <button
                   onClick={() => setAuthModalOpen(true)}
@@ -1107,18 +600,18 @@ export default function App() {
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
                 <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 dark:text-white text-base">
-                    {userRole === 'faculty' ? 'All Student Internal Assessment Records' : `Marks Breakdown for Roll No: ${currentUserRoll}`}
+                    {userRole === 'faculty' ? 'All Student Internal Marks (Faculty Management View)' : `Internal Marks Record: ${currentRegisterNo}`}
                   </h3>
-                  <div className="text-xs text-slate-500">
-                    Database: Google Sheets Connected (Active)
-                  </div>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    ● Database Synchronized
+                  </span>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-slate-50 dark:bg-slate-800/50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
-                        <th className="py-4 px-6">Roll No</th>
+                        <th className="py-4 px-6">Register No</th>
                         <th className="py-4 px-6">Student Name</th>
                         <th className="py-4 px-6">Prog / Sem</th>
                         <th className="py-4 px-4 text-center">Data Structures</th>
@@ -1126,25 +619,24 @@ export default function App() {
                         <th className="py-4 px-4 text-center">Web Tech</th>
                         <th className="py-4 px-4 text-center">AI & ML</th>
                         <th className="py-4 px-4 text-center">Software Eng</th>
-                        <th className="py-4 px-4 text-center">Total (Out of 250)</th>
+                        <th className="py-4 px-4 text-center">Total (250)</th>
                         <th className="py-4 px-4 text-center">Attendance</th>
                         {userRole === 'faculty' && <th className="py-4 px-6 text-right">Actions</th>}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300">
                       {students
-                        .filter(s => userRole === 'faculty' || s.rollNo.toUpperCase() === currentUserRoll.toUpperCase())
+                        .filter(s => userRole === 'faculty' || s.registerNo.toUpperCase() === currentRegisterNo.toUpperCase())
                         .map((st) => {
                           const total = st.dataStructures + st.databaseSystems + st.webTechnology + st.aiMachineLearning + st.softwareEngineering;
                           const isEditing = editingStudentId === st.id;
 
                           return (
                             <tr key={st.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                              <td className="py-4 px-6 font-mono font-bold text-slate-900 dark:text-white">{st.rollNo}</td>
+                              <td className="py-4 px-6 font-mono font-bold text-slate-900 dark:text-white">{st.registerNo}</td>
                               <td className="py-4 px-6 font-semibold text-slate-900 dark:text-white">{st.name}</td>
                               <td className="py-4 px-6">{st.programme} - Sem {st.semester}</td>
 
-                              {/* Marks cells (editable for faculty) */}
                               {isEditing && editForm ? (
                                 <>
                                   <td className="py-4 px-4 text-center">
@@ -1217,123 +709,146 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 7: CONTACT DEPARTMENT */}
-        {activeTab === 'contact' && (
-          <div className="py-16 max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mb-16">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3">
-                Contact Department
-              </h1>
-              <p className="text-slate-600 dark:text-slate-300 text-base">
-                Get in touch with faculty offices, admissions advisors, or administrative staff.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Contact Info Cards */}
-              <div className="space-y-6">
-                <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 flex items-center justify-center shrink-0">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-1">Campus Location</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                      Department of Computer Applications, Block B, Tech Campus, University Avenue, CA 94107
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center shrink-0">
-                    <Mail className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-1">Email Inquiries</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                      admissions.ca@university.edu<br />
-                      hod.ca@university.edu
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 flex items-center justify-center shrink-0">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-1">Phone & Office Hours</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                      +1 (555) 382-9000 / Ext 402<br />
-                      Monday – Friday: 9:00 AM – 5:00 PM
-                    </p>
-                  </div>
-                </div>
+        {/* DISCREPANCY PORTAL TAB */}
+        {activeTab === 'discrepancies' && (
+          <div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+              <div>
+                <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+                  Mark Discrepancy & Correction Portal
+                </h1>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
+                  {userRole === 'faculty' ? 'Review student dispute tickets and resolve/update marks accordingly.' : 
+                   userRole === 'student' ? 'Submit discrepancy requests if you notice any error in your internal scores.' : 
+                   'Please login to submit or review mark discrepancy tickets.'}
+                </p>
               </div>
 
-              {/* Contact Form */}
-              <div className="p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Send Us a Message</h3>
-                {contactSubmitted ? (
-                  <div className="p-6 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-xl text-center">
-                    <CheckCircle className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-                    <h4 className="font-bold mb-1">Message Sent Successfully!</h4>
-                    <p className="text-xs">Our department office will get back to you within 24 business hours.</p>
-                  </div>
-                ) : (
-                  <form onSubmit={(e) => { e.preventDefault(); setContactSubmitted(true); }} className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Your Name</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={contactForm.name}
-                        onChange={e => setContactForm({...contactForm, name: e.target.value})}
-                        placeholder="John Doe" 
-                        className="w-full px-3 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg" 
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
-                      <input 
-                        type="email`" 
-                        required 
-                        value={contactForm.email}
-                        onChange={e => setContactForm({...contactForm, email: e.target.value})}
-                        placeholder="john@example.com" 
-                        className="w-full px-3 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg" 
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Subject</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={contactForm.subject}
-                        onChange={e => setContactForm({...contactForm, subject: e.target.value})}
-                        placeholder="Admission Inquiry / Syllabus Details" 
-                        className="w-full px-3 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg" 
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Message</label>
-                      <textarea 
-                        rows={4} 
-                        required 
-                        value={contactForm.message}
-                        onChange={e => setContactForm({...contactForm, message: e.target.value})}
-                        placeholder="Type your message here..." 
-                        className="w-full px-3 py-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg"
-                      ></textarea>
-                    </div>
-                    <button 
-                      type="submit" 
-                      className="w-full py-3 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors shadow-sm"
-                    >
-                      Submit Message
-                    </button>
-                  </form>
-                )}
+              {userRole === 'student' && (
+                <button
+                  onClick={() => setDiscrepancyModalOpen(true)}
+                  className="px-5 py-2.5 text-xs font-semibold text-white bg-amber-600 rounded-xl hover:bg-amber-500 transition-colors shadow-sm flex items-center gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4" />
+                  <span>Raise New Discrepancy</span>
+                </button>
+              )}
+            </div>
+
+            {/* Tickets Table */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
+              <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">Discrepancy & Dispute Tickets</h3>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 dark:bg-slate-800/50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                      <th className="py-4 px-6">Ticket ID</th>
+                      <th className="py-4 px-6">Student / Register No</th>
+                      <th className="py-4 px-6">Subject</th>
+                      <th className="py-4 px-4 text-center">Current Mark</th>
+                      <th className="py-4 px-6">Discrepancy Reason</th>
+                      <th className="py-4 px-4 text-center">Status</th>
+                      {userRole === 'faculty' && <th className="py-4 px-6 text-right">Faculty Actions</th>}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300">
+                    {tickets
+                      .filter(t => userRole === 'faculty' || t.registerNo.toUpperCase() === currentRegisterNo.toUpperCase())
+                      .map((t) => (
+                        <tr key={t.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="py-4 px-6 font-mono font-bold text-slate-900 dark:text-white">#{t.id.slice(-4)}</td>
+                          <td className="py-4 px-6">
+                            <span className="font-bold block text-slate-900 dark:text-white">{t.studentName}</span>
+                            <span className="text-[10px] text-slate-500 font-mono">{t.registerNo}</span>
+                          </td>
+                          <td className="py-4 px-6 font-semibold">{t.subject}</td>
+                          <td className="py-4 px-4 text-center tabular-nums font-bold">{t.currentMark}</td>
+                          <td className="py-4 px-6 max-w-xs text-slate-600 dark:text-slate-400">{t.disputeReason}</td>
+                          <td className="py-4 px-4 text-center">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                              t.status === 'Resolved' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' :
+                              t.status === 'Rejected' ? 'bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-400' :
+                              'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
+                            }`}>
+                              {t.status}
+                            </span>
+                          </td>
+                          {userRole === 'faculty' && (
+                            <td className="py-4 px-6 text-right">
+                              {t.status === 'Pending' ? (
+                                <div className="flex items-center justify-end gap-2">
+                                  <button 
+                                    onClick={() => handleResolveTicket(t.id, 'Resolved')}
+                                    className="px-3 py-1 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-500"
+                                  >
+                                    Resolve & Approve
+                                  </button>
+                                  <button 
+                                    onClick={() => handleResolveTicket(t.id, 'Rejected')}
+                                    className="px-3 py-1 bg-red-600 text-white rounded-lg text-xs font-semibold hover:bg-red-500"
+                                  >
+                                    Reject
+                                  </button>
+                                </div>
+                              ) : (
+                                <span className="text-slate-400 text-xs italic">Closed</span>
+                              )}
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    {tickets.filter(t => userRole === 'faculty' || t.registerNo.toUpperCase() === currentRegisterNo.toUpperCase()).length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="py-12 text-center text-slate-500">
+                          No discrepancy tickets found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DEPARTMENT INFO TAB */}
+        {activeTab === 'about' && (
+          <div className="max-w-3xl">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Department of Computer Applications</h1>
+            <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-6">
+              The Department offers premier undergraduate (BCA, BSc CS) and postgraduate (MCA) programmes focusing on software engineering, cloud architecture, and artificial intelligence.
+            </p>
+            <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+              <h3 className="font-bold text-slate-900 dark:text-white mb-2">Internal Assessment Guidelines</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                Internal marks are calculated based on mid-term examinations, programming lab assignments, quizzes, and attendance. Students can verify their scores in real-time and submit discrepancy tickets through this secure portal.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* CONTACT TAB */}
+        {activeTab === 'contact' && (
+          <div className="max-w-xl">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">Contact Department Office</h1>
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-6">
+              For administrative support or marks verification inquiries, reach out to the department office.
+            </p>
+            <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-blue-600" />
+                <span>exams.ca@university.edu</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-blue-600" />
+                <span>+1 (555) 382-9010</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4 text-blue-600" />
+                <span>Block B, Computer Applications Wing</span>
               </div>
             </div>
           </div>
@@ -1358,7 +873,7 @@ export default function App() {
               </div>
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Portal Login</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Select your role to view internal marks or manage records
+                Select your role to access internal marks & discrepancy system
               </p>
             </div>
 
@@ -1370,14 +885,14 @@ export default function App() {
                   <span>Student Login</span>
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                  Enter your assigned roll number (e.g. BCA2026001, MCA2026015)
+                  Enter your Register Number (e.g. CA2026BCA01)
                 </p>
                 <div className="space-y-3">
                   <input 
                     type="text" 
                     value={loginInput}
                     onChange={e => setLoginInput(e.target.value)}
-                    placeholder="Enter Roll Number" 
+                    placeholder="Enter Register Number" 
                     className="w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg uppercase font-mono"
                   />
                   {loginError && <p className="text-xs text-red-600 font-medium">{loginError}</p>}
@@ -1397,7 +912,7 @@ export default function App() {
                   <span>Faculty Admin Login</span>
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                  Full administrative access to manage student marks and Google Sheets sync.
+                  Manage student names, register numbers, marks, and resolve discrepancies.
                 </p>
                 <button 
                   onClick={() => handleLogin('faculty')}
@@ -1411,21 +926,90 @@ export default function App() {
         </div>
       )}
 
-      {/* AI STUDY ADVISOR CHAT MODAL */}
+      {/* DISCREPANCY SUBMISSION MODAL */}
+      {discrepancyModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-8 border border-slate-200 dark:border-slate-800 shadow-2xl relative">
+            <button 
+              onClick={() => setDiscrepancyModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Report Mark Discrepancy</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
+              Submit a correction request to faculty for review.
+            </p>
+
+            {disputeSuccess ? (
+              <div className="p-6 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 text-emerald-700 dark:text-emerald-300 rounded-xl text-center">
+                <CheckCircle className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+                <h4 className="font-bold mb-1">Discrepancy Reported Successfully!</h4>
+                <p className="text-xs">Faculty will review your ticket and update your mark.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleDiscrepancySubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Select Subject</label>
+                  <select 
+                    value={disputeSubject}
+                    onChange={e => setDisputeSubject(e.target.value)}
+                    className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg"
+                  >
+                    <option value="Data Structures">Data Structures</option>
+                    <option value="Database Systems">Database Systems</option>
+                    <option value="Web Technology">Web Technology</option>
+                    <option value="AI & Machine Learning">AI & Machine Learning</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Discrepancy Details / Reason</label>
+                  <textarea 
+                    rows={4} 
+                    required
+                    value={disputeReason}
+                    onChange={e => setDisputeReason(e.target.value)}
+                    placeholder="Describe why you believe there is a discrepancy in your marks..."
+                    className="w-full px-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg"
+                  ></textarea>
+                </div>
+                <div className="flex justify-end gap-3 pt-2">
+                  <button 
+                    type="button" 
+                    onClick={() => setDiscrepancyModalOpen(false)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 dark:bg-slate-800 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="px-5 py-2 text-xs font-semibold text-white bg-amber-600 rounded-lg hover:bg-amber-500"
+                  >
+                    Submit Dispute
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* AI ASSISTANT MODAL */}
       {aiModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full flex flex-col h-[600px] border border-slate-800 shadow-2xl overflow-hidden">
             <div className="p-4 bg-blue-600 text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2 font-bold text-sm">
                 <Sparkles className="w-5 h-5" />
-                <span>AI Department Advisor & Study Companion</span>
+                <span>AI Department Assistant</span>
               </div>
               <button onClick={() => setAiModalOpen(false)} className="text-white/80 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50 dark:bg-slate-950">
               {aiConversation.map((msg, index) => (
                 <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -1437,19 +1021,18 @@ export default function App() {
               {isAiLoading && (
                 <div className="flex justify-start">
                   <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 text-xs rounded-2xl animate-pulse">
-                    Thinking and analyzing curriculum...
+                    Thinking...
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Input form */}
             <form onSubmit={handleSendAiMessage} className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex gap-2 shrink-0">
               <input 
                 type="text" 
                 value={aiPrompt}
                 onChange={e => setAiPrompt(e.target.value)}
-                placeholder="Ask about syllabus, exam prep, or career advice..."
+                placeholder="Ask about your marks or discrepancy process..."
                 className="flex-1 px-4 py-2.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl"
               />
               <button 
@@ -1472,12 +1055,12 @@ export default function App() {
               CA
             </div>
             <span className="text-sm font-bold text-slate-900 dark:text-white">
-              Department of Computer Applications Portal
+              Internal Marks & Discrepancy Portal
             </span>
           </div>
 
           <div className="text-xs text-slate-500 dark:text-slate-400 text-center md:text-right">
-            © 2026 University Computer Applications Department. All rights reserved.
+            © 2026 Department of Computer Applications. All rights reserved.
           </div>
         </div>
       </footer>
